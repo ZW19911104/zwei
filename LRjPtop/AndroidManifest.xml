@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.lrj.ptp"
+          android:versionCode="1"
+          android:versionName="1.0">
+	<uses-sdk android:minSdkVersion="10" android:targetSdkVersion="21"/>
+
+	<permission
+			android:name="com.lrj.ptp.permission.JPUSH_MESSAGE"
+			android:protectionLevel="signature" />
+
+
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.CAMERA"/>
+	<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+	<!--获取开机启动动作的权限permission-->
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+
+	<!-- 百度定位-->
+
+	<!-- 这个权限用于进行网络定位-->
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+	<!-- 这个权限用于访问GPS定位-->
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+	<!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"></uses-permission>
+	<!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+	<!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
+	<uses-permission android:name="android.permission.CHANGE_WIFI_STATE"></uses-permission>
+	<!-- 用于读取手机当前的状态-->
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+
+
+	<!-- 极光推送-->
+	<!-- Required  一些系统要求的权限，如访问网络等-->
+	<uses-permission android:name="com.lrj.ptp.permission.JPUSH_MESSAGE" />
+	<uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<!--<uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
+	<!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+	<!--<uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />-->
+	<!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />-->
+	<!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />-->
+	<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
+
+
+	<!-- Optional for location -->
+	<!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />-->
+	<!--<uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />-->
+	<!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />-->
+	<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+	<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+
+	<!--persistent 表示持久化的-->
+	<application android:label="@string/app_name"
+	             android:name=".base.BaseApplication"
+	             android:persistent="true"
+	             android:theme="@android:style/Theme.Black.NoTitleBar"
+	             android:icon="@drawable/icon">
+		<!-- 主界面-->
+		<activity android:name="MyActivity"
+		          android:label="@string/app_name">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+
+		<!-- 修改后主界面-->
+		<activity android:name=".activitys.MainActivity"
+		          android:label="@string/app_name">
+
+		</activity>
+		<!-- 拍照完后后的主界面-->
+
+		<!-- 图片或者视屏详情-->
+		<activity android:name=".photograph.AlbumItemAty"
+		          android:label="@string/app_name">
+
+		</activity>
+
+		<!-- 测试推送通知点击时的事件-->
+		<activity android:name=".activitys.TestActivity"
+		          android:label="@string/app_name">
+
+		</activity>
+
+		<!--开机启动Receiver-->
+		<receiver android:name=".receivers.BootReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED"></action>
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</receiver>
+
+		<!-- 开机启动service-->
+		<service android:name=".services.BootService"
+				 android:enabled="true">
+
+		</service>
+
+		<!-- 百度定位-->
+		<service
+				android:name="com.baidu.location.f"
+				android:enabled="true"
+				android:process=":remote">
+			<intent-filter>
+				<action android:name="com.baidu.location.service_v2.2">
+				</action>
+			</intent-filter>
+		</service>
+		<meta-data
+				android:name="com.baidu.lbsapi.API_KEY"
+				android:value="gEPyKnf0NDhFw7QEqZiuoA8r"/>
+
+		<!-- 极光推送-->
+		<!-- Required SDK核心功能-->
+		<!--<activity
+				android:name="cn.jpush.android.ui.PushActivity"
+				android:configChanges="orientation|keyboardHidden"
+				android:theme="@android:style/Theme.NoTitleBar"
+				android:exported="false">
+			<intent-filter>
+				<action android:name="cn.jpush.android.ui.PushActivity" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="com.lrj.ptp" />
+			</intent-filter>
+		</activity>
+		&lt;!&ndash; Required  SDK核心功能&ndash;&gt;
+		<service
+				android:name="cn.jpush.android.service.DownloadService"
+				android:enabled="true"
+				android:exported="false" >
+		</service>
+
+
+		&lt;!&ndash; Required SDK 核心功能&ndash;&gt;
+		&lt;!&ndash; 可配置android:process参数将PushService放在其他进程中 &ndash;&gt;
+		<service
+				android:name="cn.jpush.android.service.PushService"
+				android:enabled="true"
+				android:exported="false">
+			<intent-filter>
+				<action android:name="cn.jpush.android.intent.REGISTER" />
+				<action android:name="cn.jpush.android.intent.REPORT" />
+				<action android:name="cn.jpush.android.intent.PushService" />
+				<action android:name="cn.jpush.android.intent.PUSH_TIME" />
+			</intent-filter>
+		</service>
+		&lt;!&ndash; since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 &ndash;&gt;
+		&lt;!&ndash; 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 &ndash;&gt;
+		<service
+				android:name="cn.jpush.android.service.DaemonService"
+				android:enabled="true"
+				android:exported="true">
+			<intent-filter>
+				<action android:name="cn.jpush.android.intent.DaemonService" />
+				<category android:name="com.lrj.ptp" />
+			</intent-filter>
+
+		</service>
+
+		&lt;!&ndash; Required SDK核心功能&ndash;&gt;
+		<receiver
+				android:name="cn.jpush.android.service.PushReceiver"
+				android:enabled="true"
+				android:exported="false">
+			<intent-filter android:priority="1000">
+				<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />   &lt;!&ndash;Required  显示通知栏 &ndash;&gt;
+				<category android:name="com.lrj.ptp" />
+			</intent-filter>
+			<intent-filter>
+				<action android:name="android.intent.action.USER_PRESENT" />
+				<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+			</intent-filter>
+			&lt;!&ndash; Optional &ndash;&gt;
+			<intent-filter>
+				<action android:name="android.intent.action.PACKAGE_ADDED" />
+				<action android:name="android.intent.action.PACKAGE_REMOVED" />
+				<data android:scheme="package" />
+			</intent-filter>
+
+		</receiver>
+
+		&lt;!&ndash; Required SDK核心功能&ndash;&gt;
+		<receiver android:name="cn.jpush.android.service.AlarmReceiver" android:exported="false"/>
+
+		&lt;!&ndash; User defined.  For test only  自定义的广播接收器&ndash;&gt;
+		<receiver
+				android:name=".receivers.MyJPushReceiver"
+				android:exported="false"
+				android:enabled="true">
+			<intent-filter>
+				<action android:name="cn.jpush.android.intent.REGISTRATION" /> &lt;!&ndash;Required  用户注册SDK的intent&ndash;&gt;
+				<action android:name="cn.jpush.android.intent.UNREGISTRATION" />
+				<action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" /> &lt;!&ndash;Required  用户接收SDK消息的intent&ndash;&gt;
+				<action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> &lt;!&ndash;Required  用户接收SDK通知栏信息的intent&ndash;&gt;
+				<action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> &lt;!&ndash;Required  用户打开自定义通知栏的intent&ndash;&gt;
+				<action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" /> &lt;!&ndash;Optional 用户接受Rich Push Javascript 回调函数的intent&ndash;&gt;
+				<action android:name="cn.jpush.android.intent.CONNECTION" />&lt;!&ndash; 接收网络变化 连接/断开 since 1.6.3 &ndash;&gt;
+				<category android:name="com.lrj.ptp" />
+			</intent-filter>
+		</receiver>
+		&lt;!&ndash; Required  . Enable it you can get statistics data with channel &ndash;&gt;
+		<meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
+		<meta-data android:name="JPUSH_APPKEY" android:value="f86932397ec1d5e3ab26a7d2" /> &lt;!&ndash;  </>值来自开发者平台取得的AppKey&ndash;&gt;-->
+
+	</application>
+</manifest>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" jdk="Android API 19 Platform" jdk_type="Android SDK">
+	<output-test url="file://$MODULE_DIR$/out/test/LRjPtop"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<levels>
+		<level name="android-support-v4" value="project"/>
+		<level name="xUtils-2.6.14" value="project"/>
+		<level name="andbase" value="project"/>
+		<level name="locSDK_6.13" value="project"/>
+		<level name="jpush-android-2.0.5" value="project"/>
+	</levels>
+</component>

@@ -1,0 +1,226 @@
+package com.lrj.ptp.photograph.views;
+
+import android.content.Context;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.Toast;
+import com.lrj.ptp.R;
+import com.lrj.ptp.base.BaseApplication;
+import com.lrj.ptp.db.DbHelper;
+import com.lrj.ptp.db.domain.FileInfo;
+import com.lrj.ptp.photograph.MatrixBitmapDisplayer;
+import com.lrj.ptp.photograph.utils.DisplayImageOptions;
+import com.lrj.ptp.photograph.utils.FileOperateUtil;
+import com.lrj.ptp.photograph.utils.ImageLoader;
+import com.lrj.ptp.photograph.views.MatrixImageView.OnSingleTapListener;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.util.List;
+
+/**
+ * 包名：com.lrj.ptp.photograph.views
+ * 描述：自定义viewpager  优化了事件拦截
+ * User 张伟
+ * QQ:326093926
+ * Date 2015/12/3 0003.
+ * Time 上午 10:02.
+ * 修改日期：
+ * 修改内容：
+ */
+public class AlbumViewPager extends ViewPager implements MatrixImageView.OnMovingListener {
+    /**
+     * 图片加载器 优化了了缓存
+     */
+    private ImageLoader mImageLoader;
+    /**
+     * 加载图片配置参数
+     */
+    private DisplayImageOptions mOptions;
+
+    /**
+     * 当前子控件是否处理拖动状态
+     */
+    private boolean mChildIsBeingDragged = false;
+
+    /**
+     * 界面单击事件 用以显示和隐藏菜单栏
+     */
+    private OnSingleTapListener onSingleTapListener;
+
+    /**
+     * 播放按钮点击事件
+     */
+    private OnPlayVideoListener onPlayVideoListener;
+
+    public AlbumViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        mImageLoader = ImageLoader.getInstance(context);
+        //设置网络图片加载参数
+        DisplayImageOptions.Builder builder = new DisplayImageOptions.Builder();
+        builder = builder
+                .showImageOnLoading(R.drawable.ic_stub)
+                .showImageOnFail(R.drawable.ic_error)
+                .cacheInMemory(true)
+                .cacheOnDisk(false)
+                .displayer(new MatrixBitmapDisplayer());
+        mOptions = builder.build();
+    }
+
+
+    /**
+     * 删除当前项
+     *
+     * @return “当前位置/总数量”
+     */
+    public String deleteCurrentPath() {
+        return ((ViewPagerAdapter) getAdapter()).deleteCurrentItem(getCurrentItem());
+
+    }
+
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent arg0) {
+        if (mChildIsBeingDragged)
+            return false;
+        return super.onInterceptTouchEvent(arg0);
+    }
+
+    @Override
+    public void startDrag() {
+        // TODO Auto-generated method stub
+        mChildIsBeingDragged = true;
+    }
+
+
+    @Override
+    public void stopDrag() {
+        // TODO Auto-generated method stub
+        mChildIsBeingDragged = false;
+    }
+
+    public void setOnSingleTapListener(OnSingleTapListener onSingleTapListener) {
+        this.onSingleTapListener = onSingleTapListener;
+    }
+
+    public void setOnPlayVideoListener(OnPlayVideoListener onPlayVideoListener) {
+        this.onPlayVideoListener = onPlayVideoListener;
+    }
+
+    public interface OnPlayVideoListener {
+        void onPlay(String path);
+    }
+
+    public class ViewPagerAdapter extends PagerAdapter {
+        private List<String> paths;//大图地址 如果为网络图片 则为大图url
+
+        public ViewPagerAdapter(List<String> paths) {
+            this.paths = paths;
+        }
+
+        @Override
+        public int getCount() {
+            return paths.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup viewGroup, int position) {
+            //注意，这里不可以加inflate的时候直接添加到viewGroup下，而需要用addView重新添加
+            //因为直接加到viewGroup下会导致返回的view为viewGroup
+            View imageLayout = inflate(getContext(), R.layout.item_album_pager, null);
+            viewGroup.addView(imageLayout);
+            assert imageLayout != null;
+            MatrixImageView imageView = (MatrixImageView) imageLayout.findViewById(R.id.image);
+            imageView.setOnMovingListener(AlbumViewPager.this);
+            imageView.setOnSingleTapListener(onSingleTapListener);
+            String path = paths.get(position);
+            //final ProgressBar spinner = (ProgressBar) imageLayout.findViewById(R.id.loading);
+
+            ImageButton videoIcon = (ImageButton) imageLayout.findViewById(R.id.videoicon);
+            if (path.contains("video")) {
+                videoIcon.setVisibility(View.VISIBLE);
+            } else {
+                videoIcon.setVisibility(View.GONE);
+            }
+            videoIcon.setOnClickListener(playVideoListener);
+            videoIcon.setTag(path);
+            imageLayout.setTag(path);
+            mImageLoader.loadImage(path, imageView, mOptions);
+            return imageLayout;
+        }
+
+        OnClickListener playVideoListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+                String path = v.getTag().toString();
+                File f = new File((path.substring(0, path.lastIndexOf("/"))).replace(getContext().getResources().getString(R.string.Thumbnail),
+                        getContext().getResources().getString(R.string.Video)));
+                final String name = path.substring(path.lastIndexOf("/")+1, path.lastIndexOf("."));
+                File[] files = f.listFiles(new FileFilter() {
+                    @Override
+                    public boolean accept(File pathname) {
+                        if (pathname.getName().contains(name)) {
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+                if (files == null || files.length == 0) {
+                    Toast.makeText(getContext(), "找不到目标文件", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+//                path = path.replace(getContext().getResources().getString(R.string.Thumbnail),
+//                        getContext().getResources().getString(R.string.Video));
+//                path = path.replace(".jpg", "");
+                if (onPlayVideoListener != null)
+                    onPlayVideoListener.onPlay(files[0].getPath());
+                else {
+                    Toast.makeText(getContext(), "onPlayVideoListener", Toast.LENGTH_SHORT).show();
+//					throw new RuntimeException("onPlayVideoListener is null");
+                }
+            }
+        };
+
+        @Override
+        public int getItemPosition(Object object) {
+            //在notifyDataSetChanged时返回None，重新绘制
+            return POSITION_NONE;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int arg1, Object object) {
+            ((ViewPager) container).removeView((View) object);
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        //自定义获取当前view方法
+        public String deleteCurrentItem(int position) {
+            String path = paths.get(position);
+            if (path != null) {
+                //从数据库把当前文件删除
+                DbHelper.getInstance(BaseApplication.getInstance()).deleteCriteria(FileInfo.class,"filePath",path);
+                FileOperateUtil.deleteSourceFile(path, getContext());
+                paths.remove(path);
+                notifyDataSetChanged();
+                if (paths.size() > 0)
+                    return (getCurrentItem() + 1) + "/" + paths.size();
+                else {
+                    return "0/0";
+                }
+            }
+            return null;
+        }
+    }
+
+}

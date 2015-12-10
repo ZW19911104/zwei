@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="#fff"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+		>
+	<Button
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:text="拍照"
+	        android:onClick="paizhao"
+			/>
+	<Button android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="获取位置"
+	        android:onClick="locat"/>
+	<Button android:layout_width="match_parent"
+	        android:text="主界面"
+	        android:onClick="zhujiemain"
+	        android:layout_height="wrap_content"/>
+	<Button android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="初始化推送"
+	        android:onClick="initJpush"/>
+	<EditText
+			android:id="@+id/msg_rec"
+			android:layout_width="match_parent"
+			android:layout_height="50dp"
+			android:hint="请输入用户名"
+			android:text="zw"
+			android:layout_marginTop="8dip"
+			android:visibility="visible" />
+	<EditText
+			android:id="@+id/msg_recs"
+			android:layout_width="fill_parent"
+			android:layout_height="50dp"
+			android:layout_marginTop="8dip"
+			android:hint="请输入客户名称"
+			android:text="asd"
+			android:visibility="visible" />
+	<Spinner
+			android:id="@+id/spinner"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_alignParentBottom="true"
+			android:layout_centerHorizontal="true"
+
+			/>
+</LinearLayout>
+

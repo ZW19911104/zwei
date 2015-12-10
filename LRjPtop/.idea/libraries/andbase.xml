@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="andbase">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/andbase.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://F:/idea/AndBase/gen" />
+      <root url="file://F:/idea/AndBase/src" />
+    </SOURCES>
+  </library>
+</component>

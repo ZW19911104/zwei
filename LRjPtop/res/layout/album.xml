@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <!-- 显示预览图形 -->
+
+    <include
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            layout="@layout/album_header_bar" />
+
+    <TextView
+            android:layout_width="fill_parent"
+            android:background="@color/album_item_bg"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingLeft="10dip"
+            android:paddingTop="15dip"
+            android:paddingBottom="15dip"
+            android:text="@string/album_message"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="18sp" />
+
+    <com.lrj.ptp.photograph.views.AlbumGridView
+            android:id="@+id/albumview"
+            android:background="@color/album_item_bg"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:cacheColorHint="@android:color/transparent"
+            android:gravity="center"
+            android:horizontalSpacing="4dip"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="4"
+            android:padding="4dip"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="4dip" />
+
+    <include
+            android:id="@+id/album_bottom_bar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            layout="@layout/album_bottom_bar"
+            android:visibility="gone" />
+</LinearLayout>
