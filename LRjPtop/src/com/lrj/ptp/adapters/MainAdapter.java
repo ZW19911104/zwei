@@ -66,7 +66,7 @@ public class MainAdapter extends BaseAdapter {
             if (entity.istrue) {
                 viewHolderDown.ll_item_bg.setBackgroundResource(R.color.reds);
             } else {
-                viewHolderDown.ll_item_bg.setBackgroundResource(R.color.album_item_bg);
+                viewHolderDown.ll_item_bg.setBackgroundResource(R.color.main_yellow);
             }
         }
 

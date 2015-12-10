@@ -39,7 +39,7 @@ public class TypeDbInsert {
      */
     public synchronized List<PhotographType> insert_credit(String usercust,int type){
         List<PhotographType> list = dbHelper.searchCriteria(PhotographType.class,"usercust",usercust,"type",type+"");
-        if(list==null){
+        if(list==null||list.size()==0){
             list = new ArrayList<PhotographType>();
             String[] cd= null;
             switch (type){

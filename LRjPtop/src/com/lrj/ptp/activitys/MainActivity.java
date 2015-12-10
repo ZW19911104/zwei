@@ -196,26 +196,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
                 break;
             case R.id.btn_upload://上传
                 //暂时测试使用
-//                List<File> files = IMGUtils.getFileAll(this);
-//                shangchuan(files);
+                List<File> files = IMGUtils.getFileAll(this);
+                shangchuan(files);
 
                 //先判断是否所有的图片都拍摄完成
-                btn_upload.setEnabled(false);
-                if(isOver()) {
-                    //获取所有待上传的文件
-                    List<File> files = IMGUtils.getFileAll(this);
-                    if(files==null||files.size()==0){
-                        btn_upload.setEnabled(true);
-                        return;
-                    }else{
-                        //开线程开始上传 基本信息和图片
-                        shangchuan(files);
-                        btn_upload.setEnabled(true);
-                    }
-                }else{
-                    btn_upload.setEnabled(true);
-                    Toast.makeText(this,"请拍摄完所有带*必拍项",Toast.LENGTH_SHORT).show();
-                }
+//                btn_upload.setEnabled(false);
+//                if(isOver()) {
+//                    //获取所有待上传的文件
+//                    List<File> files = IMGUtils.getFileAll(this);
+//                    if(files==null||files.size()==0){
+//                        btn_upload.setEnabled(true);
+//                        return;
+//                    }else{
+//                        //开线程开始上传 基本信息和图片
+//                        shangchuan(files);
+//                        btn_upload.setEnabled(true);
+//                    }
+//                }else{
+//                    btn_upload.setEnabled(true);
+//                    Toast.makeText(this,"请拍摄完所有带*必拍项",Toast.LENGTH_SHORT).show();
+//                }
                 break;
             case R.id.head_back://返回
                 finish();
@@ -224,24 +224,26 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,A
     }
 
     private void shangchuan(final List<File> files) {
-        RequestParams requestParams = new RequestParams();
-        requestParams.addBodyParameter("userid",BaseApplication.getInstance().pathState);
-        requestParams.addBodyParameter("custname",BaseApplication.getInstance().custPathState);
-        requestParams.addBodyParameter("image",files.get(0).getName());
-        requestParams.addBodyParameter("file",files.get(0));
-        //RequestCallBack
-        httpHelper.sendTo(HttpRequest.HttpMethod.POST, Contacts.UPLOAD_ACTION,requestParams,new RequestCallBack<String>(){
+        for(File file:files) {
+            RequestParams requestParams = new RequestParams();
+            requestParams.addBodyParameter("userid", BaseApplication.getInstance().pathState);
+            requestParams.addBodyParameter("custname", BaseApplication.getInstance().custPathState);
+            requestParams.addBodyParameter("image", file.getName());
+            requestParams.addBodyParameter("file", file);
+            //RequestCallBack
+            httpHelper.sendTo(HttpRequest.HttpMethod.POST, Contacts.UPLOAD_ACTION, requestParams, new RequestCallBack<String>() {
 
-            @Override
-            public void onSuccess(ResponseInfo<String> responseInfo) {
-                Toast.makeText(MainActivity.this,"上传成功",Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void onSuccess(ResponseInfo<String> responseInfo) {
+                    Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                }
 
-            @Override
-            public void onFailure(HttpException e, String s) {
-                LOGUtils.getLogger().i(s);
-            }
-        });
+                @Override
+                public void onFailure(HttpException e, String s) {
+                    LOGUtils.getLogger().i(s);
+                }
+            });
+        }
     }
 
 
